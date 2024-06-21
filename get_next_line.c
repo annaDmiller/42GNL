@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amelniko <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/21 11:43:25 by amelniko          #+#    #+#             */
+/*   Updated: 2024/06/21 11:43:26 by amelniko         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 char	*get_next_line(int fd)
@@ -56,7 +68,7 @@ int	check_tail(char **tail)
 	len_tail = ft_strlen(*tail);
 	ind_nl = find_nl(*tail);
 	if (ind_nl == len_tail - 1 || ind_nl++ == len_tail)
-		return  (free(*tail), *tail = NULL, 0);
+		return (free(*tail), *tail = NULL, 0);
 	new_tail = (char *) malloc((len_tail - ind_nl + 1) * sizeof(char));
 	if (!new_tail)
 		return (free(*tail), -1);
