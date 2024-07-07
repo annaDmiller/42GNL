@@ -19,6 +19,8 @@ char	*get_next_line(int fd)
 	static char	*tail;
 	int			check;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	line = NULL;
 	buff = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buff)

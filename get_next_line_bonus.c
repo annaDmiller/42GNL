@@ -20,6 +20,8 @@ char	*get_next_line(int fd)
 	int			    check;
     char            **tail;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	line = NULL;
 	buff = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buff)
