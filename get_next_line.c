@@ -72,12 +72,14 @@ int	check_tail(char **tail, char **line)
 		*line = (char *) malloc((len_tail + 1) * sizeof(char));
 		if (!(*line))
 			return (free(*tail), -1);
+		(*line)[0] = '\0';
 		ft_strlcat(*line, *tail, len_tail + 1);
 		return (free(*tail), *tail = NULL, 0);
 	}
 	*line = (char *) malloc((ind_nl + 2) * sizeof(char));
 	if (!(*line))
 		return (free(*tail), -1);
+	(*line)[0] = '\0';
 	ft_strlcat(*line, *tail, ind_nl + 2);
 	return (1);
 }
@@ -89,6 +91,8 @@ int	update_tail(char **tail, char **line)
 	char	*new_tail;
 
 	ind_nl = find_nl(*tail);
+	if (!((*tail)[ind_nl + 1]))
+		return (free(*tail), *tail = NULL, 0);
 	ind = 0;
 	new_tail = (char *) malloc((ft_strlen(*tail) - ind_nl + 1) * sizeof(char));
 	if (!new_tail)
@@ -130,7 +134,7 @@ int	create_tail(char **buff, char **tail)
 	return (1);
 }
 
-int	main(void)
+/*int	main(void)
 {
 	#include <fcntl.h>
 	#include <stdio.h>
@@ -141,4 +145,4 @@ int	main(void)
 		free(line);
 	}
 	return (0);
-}
+}*/
