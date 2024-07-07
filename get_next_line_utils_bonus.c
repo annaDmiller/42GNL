@@ -72,16 +72,3 @@ size_t	find_nl(char *str)
 		ind++;
 	return (ind);
 }
-
-t_tail  *tail_new_el(int fd)
-{
-    t_tail  *new;
-
-    new = (t_tail *) malloc(sizeof(t_tail));
-    if (!new)
-        return (NULL);
-    new->fd = fd;
-    new->tail = NULL;
-    new->next = NULL;
-    return (new);
-}

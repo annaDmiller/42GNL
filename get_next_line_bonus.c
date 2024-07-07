@@ -14,20 +14,16 @@
 
 char	*get_next_line(int fd)
 {
-	char		    *buff;
-	char		    *line;
-	static t_tail   *mult_tails;
-	int			    check;
-    char            **tail;
+	char		*buff;
+	char		*line;
+	static char	*mult_tails[1024];
+	int			check;
 
 	line = NULL;
 	buff = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buff)
 		return (NULL);
-    tail = find_fd(&mult_tails, fd);
-    if (!tail && !mult_tails)
-        return (free(mult_tails), NULL);
-    check = form_line(&line, tail, &buff, fd);
+    check = form_line(&line, &(mult_tails[fd]), &buff, fd);
 	if (check == -1)
 		return (free(buff), NULL);
 	return (free(buff), line);
@@ -112,45 +108,3 @@ int	upd_tail(char **buff, char **tail)
 	(*tail)[ind] = '\0';
 	return (1);
 }
-
-char    **find_fd(t_tail **mult_tails, int fd)
-{
-    t_tail  *temp;
-    t_tail  *new;
-
-    if (!(*mult_tails))
-    {
-        new = tail_new_el(fd);
-        if (!new)
-            return (NULL);
-        *mult_tails = new;
-        return (&(new->tail));
-    }
-    temp = *mult_tails;
-    while (temp)
-    {
-        if (temp->fd == fd)
-            return (&(temp->tail));
-        temp = temp->next;
-    }
-    new = tail_new_el(fd);
-    if (!new)
-        return (NULL);
-    new->next = *mult_tails;
-    *mult_tails =  new;
-    return (&((*mult_tails)->tail));
-}
-
-/*#include <stdio.h>
-int main(void)
-{
-    int fd1 = open("test.txt", O_RDONLY);
-    int fd2 = open("text.txt", O_RDONLY);
-
-    for (int i = 0; i < 3; i++)
-    {
-        printf("%s", get_next_line(fd1));
-        printf("%s", get_next_line(fd2));
-    }
-    return (0);
-}*/
