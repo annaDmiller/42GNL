@@ -10,26 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
-char	*ft_realloc(char *str, char **buff)
+char	*realloc_line(char *line, char **buff)
 {
 	size_t	len_line;
 	char	*ret_line;
 	size_t	check_ind;
+	size_t	len_new_line;
 
-	len_line = ft_strlen(str);
+	len_line = ft_strlen(line);
 	check_ind = find_nl(*buff);
 	if (ft_strlen(*buff) == check_ind)
-		ret_line = (char *) malloc((len_line + check_ind + 1) * sizeof(char));
+		len_new_line = len_line + check_ind;
 	else
-		ret_line = (char *) malloc((len_line + check_ind + 2) * sizeof(char));
+		len_new_line = len_line + check_ind + 1;
+	ret_line = (char *) malloc((len_new_line + 1) * sizeof(char));
 	if (!ret_line)
 		return (NULL);
 	ret_line[0] = '\0';
-	ft_strlcat(ret_line, str, len_line + 1);
-	ft_strlcat(ret_line, *buff, check_ind + 2);
-	free(str);
+	ft_strlcat(ret_line, line, len_new_line + 1);
+	ft_strlcat(ret_line, *buff, len_new_line + 1);
+	free(line);
 	return (ret_line);
 }
 
@@ -45,22 +47,28 @@ size_t	ft_strlen(const char *s)
 	return (index);
 }
 
-int	ft_strlcat(char *dest, char *str, size_t size)
+int	ft_strlcat(char *dest, const char *src, size_t sz)
 {
-	size_t	ind_str;
-	size_t	ind_dest;
+	size_t	index;
+	size_t	len_dest;
+	size_t	len_src;
 
-	ind_dest = 0;
-	while (dest[ind_dest])
-		ind_dest++;
-	ind_str = 0;
-	while (ind_str < size - 1 && str[ind_str])
+	if (dest && src)
 	{
-		dest[ind_dest + ind_str] = str[ind_str];
-		ind_str++;
+		len_dest = ft_strlen(dest);
+		len_src = ft_strlen(src);
+		if (sz <= len_dest)
+			return (len_src + sz);
+		index = 0;
+		while (src[index] && len_dest + index < sz - 1)
+		{
+			dest[len_dest + index] = src[index];
+			index++;
+		}
+		dest[len_dest + index] = '\0';
+		return (len_dest + len_src);
 	}
-	dest[ind_dest + ind_str] = '\0';
-	return (ind_dest + ind_str);
+	return (0);
 }
 
 size_t	find_nl(char *str)
@@ -68,7 +76,11 @@ size_t	find_nl(char *str)
 	size_t	ind;
 
 	ind = 0;
-	while (str[ind] && str[ind] != '\n')
+	while (str[ind])
+	{
+		if (str[ind] == '\n')
+			return (ind);
 		ind++;
+	}
 	return (ind);
 }
