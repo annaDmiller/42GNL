@@ -26,55 +26,78 @@ char	*get_next_line(int fd)
 	if (!buff)
 		return (NULL);
 	check = form_line(&line, &tail, &buff, fd);
+	free(buff);
 	if (check == -1)
-		return (free(buff), NULL);
-	return (free(buff), line);
+		return (NULL);
+	return (line);
 }
 
 int	form_line(char **line, char **tail, char **buff, int fd)
 {
 	ssize_t	byte;
-	int		ret;
+	int		check;
 
 	if (*tail != NULL)
 	{
-		*line = ft_realloc(*line, tail);
-		if (!(*line))
-			return (free (*tail), -1);
-		ret = check_tail(tail);
-		if (ret != 0)
-			return (ret);
+		check = check_tail(tail, line);
+		if (check == -1)
+			return (check);
+		if (check == 1)
+			return (update_tail(tail, line));
 	}
 	byte = read(fd, *buff, BUFFER_SIZE);
 	while (byte > 0)
 	{
 		(*buff)[byte] = '\0';
-		*line = ft_realloc(*line, buff);
+		*line = realloc_line(*line, buff);
 		if (!(*line))
 			return (-1);
-		ret = upd_tail(buff, tail);
-		if (ret != 0)
-			return (ret);
+		check = create_tail(buff, tail);
+		if (check)
+			return (check);
 		byte = read(fd, *buff, BUFFER_SIZE);
 	}
 	return (0);
 }
 
-int	check_tail(char **tail)
+int	check_tail(char **tail, char **line)
 {
-	char	*new_tail;
 	size_t	ind_nl;
 	size_t	len_tail;
-	size_t	ind;
 
-	len_tail = ft_strlen(*tail);
 	ind_nl = find_nl(*tail);
-	if (ind_nl == len_tail - 1 || ind_nl++ == len_tail)
+	len_tail = ft_strlen(*tail);
+	if (ind_nl == len_tail)
+	{
+		*line = (char *) malloc((len_tail + 1) * sizeof(char));
+		if (!(*line))
+			return (free(*tail), -1);
+		(*line)[0] = '\0';
+		ft_strlcat(*line, *tail, len_tail + 1);
 		return (free(*tail), *tail = NULL, 0);
-	new_tail = (char *) malloc((len_tail - ind_nl + 1) * sizeof(char));
-	if (!new_tail)
+	}
+	*line = (char *) malloc((ind_nl + 2) * sizeof(char));
+	if (!(*line))
 		return (free(*tail), -1);
+	(*line)[0] = '\0';
+	ft_strlcat(*line, *tail, ind_nl + 2);
+	return (1);
+}
+
+int	update_tail(char **tail, char **line)
+{
+	size_t	ind_nl;
+	size_t	ind;
+	char	*new_tail;
+
+	ind_nl = find_nl(*tail);
+	if (!((*tail)[ind_nl + 1]))
+		return (free(*tail), *tail = NULL, 0);
 	ind = 0;
+	new_tail = (char *) malloc((ft_strlen(*tail) - ind_nl + 1) * sizeof(char));
+	if (!new_tail)
+		return (free(*tail), free(*line), -1);
+	ind_nl++;
 	while ((*tail)[ind + ind_nl])
 	{
 		new_tail[ind] = (*tail)[ind + ind_nl];
@@ -86,7 +109,7 @@ int	check_tail(char **tail)
 	return (1);
 }
 
-int	upd_tail(char **buff, char **tail)
+int	create_tail(char **buff, char **tail)
 {
 	size_t	check_ind;
 	size_t	ind;
@@ -110,3 +133,16 @@ int	upd_tail(char **buff, char **tail)
 	(*tail)[ind] = '\0';
 	return (1);
 }
+
+/*int	main(void)
+{
+	#include <fcntl.h>
+	#include <stdio.h>
+	int	fd = open("./test.txt", O_RDONLY);
+	for (char *line = get_next_line(fd); line; line = get_next_line(fd))
+	{
+		printf("%s", line);
+		free(line);
+	}
+	return (0);
+}*/

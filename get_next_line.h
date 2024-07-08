@@ -22,10 +22,11 @@
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
-char	*ft_realloc(char *str, char **buff);
-int		upd_tail(char **buff, char **tail);
-size_t	find_nl(char *str);
-int		ft_strlcat(char *dest, char *str, size_t size);
-int		check_tail(char **tail);
+char	*realloc_line(char *str, char **buff);
+int		create_tail(char **buff, char **tail);
+size_t  find_nl(char *str);
+int 	ft_strlcat(char *dest, const char *src, size_t sz);
+int		check_tail(char **tail, char **line);
+int     update_tail(char **tail, char **line);
 int		form_line(char **line, char **tail, char **buff, int fd);
 #endif
