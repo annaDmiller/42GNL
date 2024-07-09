@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -24,9 +24,9 @@ char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
 char	*realloc_line(char *str, char **buff);
 int		create_tail(char **buff, char **tail);
-size_t  find_nl(char *str);
-int 	ft_strlcat(char *dest, const char *src, size_t sz);
+size_t	find_nl(char *str);
+int		ft_strlcat(char *dest, const char *src, size_t sz);
 int		check_tail(char **tail, char **line);
-int     update_tail(char **tail, char **line);
+int		update_tail(char **tail, char **line);
 int		form_line(char **line, char **tail, char **buff, int fd);
 #endif
