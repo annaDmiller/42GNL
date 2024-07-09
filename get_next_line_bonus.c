@@ -138,11 +138,14 @@ int	create_tail(char **buff, char **tail)
 {
 	#include <fcntl.h>
 	#include <stdio.h>
-	int	fd = open("./test.txt", O_RDONLY);
-	for (char *line = get_next_line(fd); line; line = get_next_line(fd))
-	{
-		printf("%s", line);
-		free(line);
-	}
+	int	f1 = open("./1.txt", O_RDONLY);
+	int	f2 = open("./2.txt", O_RDONLY);
+	int	f3 = open("./3.txt", O_RDONLY);
+	printf("%s", get_next_line(f1));
+	printf("%s", get_next_line(f2));
+	printf("%s", get_next_line(f3));
+	printf("%s", get_next_line(f1));
+	printf("%s", get_next_line(f2));
+	printf("%s", get_next_line(f3));
 	return (0);
 }*/
